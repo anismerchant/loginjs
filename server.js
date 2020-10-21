@@ -1,10 +1,14 @@
 const express = require('express');
 const app = express();
 const helmet = require('helmet');
+const connectDB = require('./config/db');
 
-// for security: protects against well-known vulnerabilities
-// sets http headers up-front
+// protects against well-known vulnerabilities
+// and sets http headers up-front
 app.use(helmet());
+
+// connect database
+connectDB();
 
 // init middleware
 app.use(express.urlencoded({ extended: true }));
