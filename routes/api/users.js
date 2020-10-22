@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const gravatar = require('gravatar');
 const User = require('../../models/User');
@@ -66,10 +67,30 @@ router.post(
 			// saving hashed password to user object
 			user.password = await bcrypt.hash(password, salt);
 
-			// save user object in mongodb
+      // save user object in mongodb
+      // this returns a promise from which we can grab 'id'
+      // note: mongoose abstracts '_id' to 'id'
 			await user.save();
 
-			res.send('User route');
+			// create payload
+			const payload = {
+				user: {
+					id: user.id,
+				},
+			};
+
+			// sign the token with payload and secret
+			jwt.sign(
+				payload,
+				process.env.JWT_SECRET,
+				{
+					expiresIn: 7200, // in seconds
+				},
+				(err, token) => {
+					if (err) throw err;
+					res.json({ token });
+				}
+			);
 		} catch (err) {
 			console.error(err.message);
 			res.status(500).send('Server error');
