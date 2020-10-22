@@ -12,11 +12,6 @@ app.use(helmet());
 // connect database
 connectDB();
 
-// @route  GET /
-// @desc   Test route
-// @access Public
-app.get('/', (req, res) => res.send('API Running'));
-
 // init middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
