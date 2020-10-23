@@ -8,7 +8,7 @@ const User = require('../../models/User');
 
 // @route  POST api/users
 // @desc   Register user
-// @access Public
+// @access Public >> access private routes after auth successful
 router.post(
 	'/',
 	[
