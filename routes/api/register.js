@@ -8,11 +8,10 @@ const User = require('../../models/User');
 
 exports = module.exports = registerUser;
 
-function registerUser(jwtSecret) {
+function registerUser(jwtSecret, passwordLength, jwtExpiration) {
 	// @route  POST api/users
 	// @desc   Register user
 	// @access Public >> access private routes after auth successful
-
 	router.post(
 		'/',
 		[
@@ -20,8 +19,8 @@ function registerUser(jwtSecret) {
 			body('email', 'Please include a valid email.').isEmail(),
 			body(
 				'password',
-				'Please enter a password with 7 or more characters.'
-			).isLength({ min: 7 }),
+				`Please enter a password with ${passwordLength} or more characters.`
+			).isLength({ min: passwordLength }),
 		],
 		async (req, res) => {
 			const errors = validationResult(req);
@@ -57,14 +56,6 @@ function registerUser(jwtSecret) {
 					password,
 				});
 
-				// create a new instance of user
-				user = new User({
-					name,
-					email,
-					avatar,
-					password,
-				});
-
 				// encrypt password: convert text password to a hash value
 				const salt = await bcrypt.genSalt(10);
 
@@ -88,7 +79,7 @@ function registerUser(jwtSecret) {
 					payload,
 					jwtSecret,
 					{
-						expiresIn: 7200, // in seconds
+						expiresIn: jwtExpiration, // in seconds
 					},
 					(err, token) => {
 						if (err) throw err;

@@ -8,7 +8,7 @@ const { body, validationResult } = require('express-validator');
 
 exports = module.exports = loginUser;
 
-function loginUser(jwtSecret) {
+function loginUser(jwtSecret, jwtExpiration) {
 	// @route  GET api/auth
 	// @desc   Get auth user
 	// @access Private
@@ -68,7 +68,7 @@ function loginUser(jwtSecret) {
 					payload,
 					jwtSecret,
 					{
-						expiresIn: 7200, // in seconds
+						expiresIn: jwtExpiration, // in seconds
 					},
 					(err, token) => {
 						if (err) throw err;
