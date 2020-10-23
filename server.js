@@ -1,25 +1,37 @@
+'use strict';
+
+/*!
+ * loginJS
+ * Author: Anis Merchant <anisxmerchant@gmail.com>
+ * MIT Licensed
+ */
+
 const express = require('express');
 const app = express();
 const helmet = require('helmet');
 const connectDB = require('./config/db');
-const users = require('./routes/api/users');
-const auth = require('./routes/api/auth');
+const registerUser = require('./routes/api/register');
+const loginUser = require('./routes/api/login');
 
-// protects against well-known vulnerabilities
-// and sets http headers up-front
-app.use(helmet());
+exports = module.exports = createLogin;
 
-// connect database
-connectDB();
+function createLogin(mongodbURI, jwtSecret, register, login) {
+	// protects against well-known vulnerabilities
+	// and sets http headers up-front
+	app.use(helmet());
 
-// init middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+	// connect database
+	connectDB(mongodbURI);
 
-// define routes
-app.use('/api/users', users);
-app.use('/api/auth', auth);
+	// init middleware
+	app.use(express.urlencoded({ extended: true }));
+	app.use(express.json());
 
-const PORT = process.env.PORT || 5000;
+	// define routes
+	app.use(register, registerUser(jwtSecret));
+	app.use(login, loginUser(jwtSecret));
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+	const PORT = process.env.PORT || 5000;
+
+	app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+}
