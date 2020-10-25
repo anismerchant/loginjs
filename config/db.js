@@ -4,15 +4,35 @@ const dotenv = require('dotenv');
 // configure dotenv
 dotenv.config();
 
-const connectDB = async (dbURI) => {
+const connectDB = (dbURI) => {
 	try {
-		await mongoose.connect(dbURI, {
+		mongoose.connect(dbURI, {
 			useNewUrlParser: true,
 			useCreateIndex: true,
 			useUnifiedTopology: true,
 			useFindAndModify: false,
 		});
-		console.log('MongoDB connected...');
+		mongoose.connection.on('connected', () => {
+			console.log(`Database Connection Established at ${dbURI}`);
+		});
+
+		mongoose.connection.on('error', (error) => {
+			console.warn('Warning', error);
+		});
+
+		mongoose.connection.on('disconnected', function () {
+			console.log('Mongoose default connection disconnected');
+		});
+
+		// close mongoose connection if the Node process ends
+		process.on('SIGINT', function () {
+			mongoose.connection.close(function () {
+				console.log(
+					'Mongoose default connection disconnected through app termination'
+				);
+				process.exit(0);
+			});
+		});
 	} catch (err) {
 		console.error(err.message);
 		// exit process with failure
