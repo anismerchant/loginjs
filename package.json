@@ -1,0 +1,35 @@
+{
+  "name": "loginjs",
+  "version": "1.0.0",
+  "description": "Generates node.js user signup & login system",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "server": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anismerchant/loginjs.git"
+  },
+  "keywords": [],
+  "author": "Anis Merchant",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/anismerchant/loginjs.git/issues"
+  },
+  "homepage": "https://github.com/anismerchant/loginjs.git#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.6.1",
+    "gravatar": "^1.8.1",
+    "helmet": "^4.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.7",
+    "nodemailer": "^6.4.14"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
