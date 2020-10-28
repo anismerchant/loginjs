@@ -6,7 +6,7 @@ Minimalist module built to quickly setup a secure back-end express login system.
 
 Before installing, [download and install Node.js](https://nodejs.org/en/download/).
 
-For brand new projects, be sure to create a `package.json` first with the [`npm init` command](<https://docs.npmjs.com> creating-a-package-json-file).
+For brand new projects, be sure to create a `package.json` first with the [`npm init` command](https://docs.npmjs.com/creating-a-package-json-file).
 
 Next, run the following command in your terminal:
 
@@ -79,7 +79,7 @@ npm install loginjs
 
 ## Stand-alone Login System Quick Setup
 
-If you prefer quick access to only the login feature without reset password functionality, then the setup is as follows:
+If you prefer quick access to only the login functionality without reset password feature, then the setup is as follows:
 
 1. Create an `index.js` file, and paste the starter code shown below inside of it.
 
@@ -170,7 +170,7 @@ To test these endpoints, I would higly recommend using Postman as per illustrati
 
 ## MongoDB Setup
 
-Login.js integrates with MongoDB. Before running Login.js module, be sure to lauch a MongoDB server and provide its URI as an environmental variable in `.env` file (discussed above).
+Login.js integrates with MongoDB. Before running Login.js module, be sure to lauch a MongoDB server and provide its URI as an environment variable in `.env` file (discussed above).
 
 Alternatively, I recommend setting up a [MongoDB Cloud Cluster.](https://www.mongodb.com/cloud)
 
