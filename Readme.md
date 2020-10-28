@@ -77,6 +77,51 @@ npm install loginjs
    ACCOUNT_PWD_LENGTH = 10;
    ```
 
+## Stand-alone Login System Quick Setup
+
+If you prefer quick access to only the login feature without reset password functionality, then the setup is as follows:
+
+1. Create an `index.js` file, and paste the starter code shown below inside of it.
+
+   ```js
+   const loginJS = require('./index');
+   const createLogin = loginJS.createLogin;
+
+   // required
+   const loginConfig = {
+   mongodbURI: process.env.MONGODB_URI,
+   jwtSecret: process.env.JWT_SECRET,
+   };
+
+   // Insert optional customization here if you need it (see below).
+
+   // Login system without reset password feature
+   createLogin(loginConfig, launchApp = true);
+   ```
+
+   These are **optional** should you need to change default values included in Login.js. If so, please add the following to your `index.js`.
+
+   ```js
+   loginConfig.passwordLength = parseInt(process.env.ACCOUNT_PWD_LENGTH); // positive integer
+   loginConfig.jwtSessionExpiration = parseInt(
+   process.env.JWT_SESSION_EXPIRATION
+   ); // in seconds
+   ```
+
+2. Create a `.env` file to store a list of environmental variables needed for this module to run. These are **required**:
+
+   ```js
+   MONGODB_URI=mongodb+srv://jdoe:password@cluster0.d312b.mongodb.net/loginjs?retryWrites=true&w=majority
+   JWT_SECRET=xyzjwtsec3874r3t
+   ```
+
+   These are **optional**:
+
+   ```js
+   JWT_SESSION_EXPIRATION = 3600;
+   ACCOUNT_PWD_LENGTH = 10;
+   ```
+
 ## Features
 
 - Member sign up and sign In
@@ -133,7 +178,7 @@ Alternatively, I recommend setting up a [MongoDB Cloud Cluster.](https://www.mon
 
 If you discover a security vulnerability or would like to help me improve Login.js, please email me at: anisxmerchant(at)gmail(dot)com. Alternatively, submit a pull request at this project's github, and we'll go from there. Thank you for your support.
 
-## Testing Endpoints in Postman (illustratons)
+## Testing Endpoints in Postman (illustrations)
 
 ### 1. Register Member
 

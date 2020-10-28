@@ -1,3 +1,4 @@
+const loginJS = require('./index');
 const createLogin = loginJS.createLogin;
 
 const loginConfig = {
@@ -7,7 +8,7 @@ const loginConfig = {
 
 // Optional
 // loginConfig.passwordLength = parseInt(process.env.ACCOUNT_PWD_LENGTH); // positive integer
-// loginConfig.jwtExpiration = parseInt(process.env.JWT_SESSION_EXPIRATION); // in seconds
+// loginConfig.jwtSessionExpiration = parseInt(process.env.JWT_SESSION_EXPIRATION); // in seconds
 
 // Login system without reset password feature
 createLogin(loginConfig, launchApp = true);
