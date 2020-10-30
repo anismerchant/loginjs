@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/anismerchant/loginjs.git"
   },
-  "keywords": [],
+  "keywords": ["login backend", "sign up backend", "create account", "authenticate account", "login.js"],
   "author": "Anis Merchant",
   "license": "MIT",
   "bugs": {
