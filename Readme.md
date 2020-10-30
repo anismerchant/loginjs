@@ -16,7 +16,7 @@ npm install loginjs
 
 ## Quick Setup
 
-1. Create an `index.js` file, and paste the starter code shown below inside of it.
+Create an `index.js` file, and paste the starter code shown below inside of it.
 
    ```js
    const loginJS = require('loginjs');
@@ -56,7 +56,9 @@ npm install loginjs
    ); // in seconds
    ```
 
-2. Create a `.env` file to store a list of environmental variables needed for this module to run. These are **required**:
+Create a `.env` file to store a list of environmental variables needed for this module to run.
+
+These are **required**:
 
    ```js
    MONGODB_URI=mongodb+srv://jdoe:password@cluster0.d312b.mongodb.net/loginjs?retryWrites=true&w=majority
@@ -79,9 +81,9 @@ npm install loginjs
 
 ## Stand-alone Login System Quick Setup
 
-If you prefer quick access to only the login functionality without reset password feature, then the setup is as follows:
+If you prefer quick access to only the login functionality without the reset password feature, then the setup is as follows:
 
-1. Create an `index.js` file, and paste the starter code shown below inside of it.
+Create an `index.js` file, and paste the starter code shown below inside of it.
 
    ```js
    const loginJS = require('./index');
@@ -108,7 +110,7 @@ If you prefer quick access to only the login functionality without reset passwor
    ); // in seconds
    ```
 
-2. Create a `.env` file to store a list of environmental variables needed for this module to run. These are **required**:
+Create a `.env` file to store a list of environmental variables needed for this module to run. These are **required.**
 
    ```js
    MONGODB_URI=mongodb+srv://jdoe:password@cluster0.d312b.mongodb.net/loginjs?retryWrites=true&w=majority
@@ -124,49 +126,19 @@ If you prefer quick access to only the login functionality without reset passwor
 
 ## Features
 
-- Member sign up and sign In
+- Client sign up and sign In
 
-- Member gravatar
+- Client gravatar
 
 - Encrypted password storage in MongoDB
 
-- Member authentication and reset password
+- Client authentication and reset password
 
-- Reset password email sent to member
+- Client email verification
 
-## API Endpoints
+- Reset password email sent to Client
 
-To test these endpoints, I would higly recommend using Postman as per illustrations below:
-
-1. Register Member
-
-   ```text
-   POST: /api/register
-   ```
-
-2. Get Authorized Member
-
-   ```text
-   GET: /api/login
-   ```
-
-3. Sign In Member
-
-   ```text
-   POST: /api/login
-   ```
-
-4. Forgot Password
-
-   ```text
-   PUT: /api/forgot-password
-   ```
-
-5. Reset Password
-
-   ```text
-   PATCH: /api/reset-password
-   ```
+- Verify email sent to Client
 
 ## MongoDB Setup
 
@@ -176,30 +148,202 @@ Alternatively, I recommend setting up a [MongoDB Cloud Cluster.](https://www.mon
 
 ## Security Issues
 
-If you discover a security vulnerability or would like to help me improve Login.js, please email me at: anisxmerchant(at)gmail(dot)com. Alternatively, submit a pull request at this project's github, and we'll go from there. Thank you for your support.
+If you discover a security vulnerability or would like to help me improve Login.js, please email me. Alternatively, submit a pull request at this project's github, and we'll go from there. Thank you for your support.
 
-## Testing Endpoints in Postman (illustrations)
+## API Endpoints
 
-### 1. Register Member
+To test these endpoints, I would higly recommend using Postman as per illustrations and other details.
 
-![register-member](https://user-images.githubusercontent.com/5770541/97410926-08860180-18d6-11eb-920e-06bb6631dca6.png)
+Register Client
 
-### 2. Get Authorized Member Information
+   ```text
+   POST: /api/register
+   ```
 
-![get-auth-member](https://user-images.githubusercontent.com/5770541/97410996-16d41d80-18d6-11eb-8c14-b8a7afb0a8a3.png)
+Get Authorized Client
 
-### 3. Sign In Member
+   ```text
+   GET: /api/login
+   ```
 
-![signin-member](https://user-images.githubusercontent.com/5770541/97410968-1045a600-18d6-11eb-9e08-ce4f97410f7d.png)
+Sign In Client
 
-### 4. Forgot Password
+   ```text
+   POST: /api/login
+   ```
 
-![forgot-password](https://user-images.githubusercontent.com/5770541/97411338-82b68600-18d6-11eb-8b80-b4dbc5a446ba.png)
+Verify Email Address
 
-### 5. Reset Password
+   ```text
+   PATCH: /api/verify-email
+   ```
 
-![reset-password](https://user-images.githubusercontent.com/5770541/97411387-93ff9280-18d6-11eb-8248-718aefc2bfab.png)
+Forgot Password
 
-### 6. Reset Password Email Sent to Member
+   ```text
+   PUT: /api/forgot-password
+   ```
 
-![reset-email](https://user-images.githubusercontent.com/5770541/97411343-8518e000-18d6-11eb-81df-00cec595d572.png)
+Reset Password
+
+   ```text
+   PATCH: /api/reset-password
+   ```
+
+### req and res Objects
+
+Register Client
+
+```js
+// a 'verify your email address' link is sent via email to the client which contains the 'verifyEmailToken' in the URL
+
+// req object (sent from client to server)
+
+req.body = {
+   name,
+   email,
+   password
+}
+```
+
+```js
+// res object (returned to client from server)
+
+res.json({
+   token
+})
+```
+
+Get Authorized Client
+
+```js
+// token (from above) sent back to server via http headers for client authorization and access to private routes
+
+axios.defaults.headers.common['x-auth-token'] = token;
+```
+
+Sign In Client
+
+```js
+// if unverified, a 'verify your email address' link is sent via email to the client which contains the 'verifyEmailToken' in the URL
+
+// req object (sent from client to server)
+
+req.body = {
+   name,
+   email,
+   password
+}
+```
+
+```js
+// res object (returned to client from server)
+
+res.json({
+   token
+})
+```
+
+Verify Email
+
+```js
+// note: 'verifyEmailToken' inside req.body directly below is from the email to client (see comments above) and it's the same token as above
+
+// req object (sent from client to server)
+
+req.body = {
+   verifyEmailToken,
+   newPassword
+}
+
+// res object (returned to client from server)
+
+res.json({
+   msg
+})
+```
+
+Forgot Password
+
+```js
+// req object (sent from client to server)
+
+req.body = {
+   email
+}
+```
+
+```js
+// a reset-password link is sent via email to the client which contains the 'resetToken' in the URL
+
+// res object (returned to client from server)
+
+res.json({
+   msg
+})
+```
+
+Reset Password
+
+```js
+// note: 'resetToken' inside req.body below is from the email to client (see comment above)
+
+// req object (sent from client to server)
+
+req.body = {
+   resetToken,
+   newPassword
+}
+
+// res object (returned to client from server)
+
+res.json({
+   msg
+})
+```
+
+### Testing Endpoints in Postman (illustrations)
+
+Register Client
+
+Shows the req object with client's name, email, and password sent to the server, and res object with the token is returned.
+
+![register-client](https://user-images.githubusercontent.com/5770541/97674924-bcb59280-1a64-11eb-98b7-b81d9748d2bd.png)
+
+Get Authorized Client Information
+
+Shows x-auth-token and its value set in the headers, and res object with the client details is returned.
+
+![get-auth-client](https://user-images.githubusercontent.com/5770541/97674969-cf2fcc00-1a64-11eb-9458-14c139998a37.png)
+
+Sign In Client
+
+Shows the req object sent with the client email and password to the server, and res object with the token is returned.
+
+![signin-client](https://user-images.githubusercontent.com/5770541/97674986-d48d1680-1a64-11eb-923f-7e4e99ecf4b2.png)
+
+Verify Email Address
+
+Shows the req object sent with 'verifyEmailToken' to the server, and res object with a msg to the client is returned.
+
+![verify-email](https://user-images.githubusercontent.com/5770541/97675005-db1b8e00-1a64-11eb-8caa-b7247895ac5b.png)
+
+Forgot Password
+
+Shows the req object sent with the client email to the server, and res object with a msg to the client is returned.
+
+![forgot-password](https://user-images.githubusercontent.com/5770541/97675034-ebcc0400-1a64-11eb-8e79-f61305b88bc8.png)
+
+Reset Password
+
+Shows the req object sent with 'resetToken' and client's 'newPassword' to the server, and res object with a msg to the client is returned.
+
+![reset-password](https://user-images.githubusercontent.com/5770541/97675039-ed95c780-1a64-11eb-80dd-4e7e8dcc9f53.png)
+
+Reset Password Email Sent to Client
+
+![reset-email](https://user-images.githubusercontent.com/5770541/97639557-32920d80-1a15-11eb-8c01-36f8cc9f6715.png)
+
+Verification Email Sent to Client
+
+![verify-your-email](https://user-images.githubusercontent.com/5770541/97639629-55bcbd00-1a15-11eb-82f6-5e22eca8c6d7.png)
