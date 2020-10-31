@@ -1,5 +1,5 @@
 {
-  "name": "loginjs",
+  "name": "@anismerchant/loginjs",
   "version": "0.1.0",
   "description": "Generates node.js user signup & login system",
   "main": "index.js",
