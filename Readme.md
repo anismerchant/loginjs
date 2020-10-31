@@ -1,6 +1,6 @@
 # Login.js
 
-Minimalist module built to quickly setup a secure back-end express login system.
+Minimalist module built to set up a secure back-end express login system in record speed.
 
 ## Installation
 
@@ -51,14 +51,14 @@ Create an `index.js` file, and paste the starter code shown below inside of it.
   loginJS(loginConfig, resetConfig, verifyEmailConfig);
    ```
 
-   These are **optional** should you need to change default values included in Login.js. If so, please add the following to your `index.js`.
+   These are **optional** should you need to change default values included in Login.js. If so, please add the following to your `index.js`:
 
    ```js
    // optional
    resetConfig.jwtResetExpiration = parseInt(process.env.JWT_RESET_EXPIRATION); // in seconds
    resetConfig.emailHeading = 'Your Custom Heading';
-   resetConfig.emailSubjectLine = 'Reset Password';
-   resetConfig.emailMessage ='Custom reset password message goes here. Reset password link will be auto-generated and placed below your message.';
+   resetConfig.emailSubjectLine = 'Your Custom Subject Line';
+   resetConfig.emailMessage ='Your custom reset password message goes here. Reset password link will be generated and placed below your custom message.';
 
    // optional
    loginConfig.passwordLength = parseInt(process.env.ACCOUNT_PWD_LENGTH); // positive integer
@@ -68,8 +68,8 @@ Create an `index.js` file, and paste the starter code shown below inside of it.
 
    // optional
    verifyEmailConfig.emailHeading = 'Your Company Name';
-   verifyEmailConfig.emailSubjectLine = 'Reset Password';
-   verifyEmailConfig.emailMessage = 'Custom reset password message goes here. Reset password link will be auto-generated.';
+   verifyEmailConfig.emailSubjectLine = 'Your Custom Subject Line';
+   verifyEmailConfig.emailMessage = 'Your custom reset password message goes here. Reset password link will be generated and placed below your custom message.';
    ```
 
 Create a `.env` file to store a list of environmental variables needed for this module to run.
@@ -77,6 +77,8 @@ Create a `.env` file to store a list of environmental variables needed for this 
 These are **required**:
 
    ```js
+   // replace mock credentials with your own
+
    MONGODB_URI=mongodb+srv://jdoe:password@cluster0.d312b.mongodb.net/loginjs?retryWrites=true&w=majority
    JWT_SECRET=xyzjwtsec3874r3t
    JWT_RESET_SECRET=mtcjreset56874sec56rt
@@ -87,7 +89,7 @@ These are **required**:
    EMAIL_SECURE=true
    ```
 
-   These are **optional**:
+   These are **optional** should you need to change default values included in Login.js. If so, please add the following to your `index.js`:
 
    ```js
    JWT_SESSION_EXPIRATION = 3600; // default value inside Login.js module set 7200 (seconds)
@@ -126,7 +128,7 @@ Create an `index.js` file, and paste the starter code shown below inside of it.
    createLogin(loginConfig, verifyEmailConfig, launchApp = true);
    ```
 
-   These are **optional** should you need to change default values included in Login.js. If so, please add the following to your `index.js`.
+   These are **optional** should you need to change default values included in Login.js. If so, please add the following to your `index.js`:
 
    ```js
    loginConfig.passwordLength = parseInt(process.env.ACCOUNT_PWD_LENGTH); // positive integer
@@ -138,12 +140,14 @@ Create an `index.js` file, and paste the starter code shown below inside of it.
    ```js
    verifyEmailConfig.emailHeading = 'Your Company Name';
    verifyEmailConfig.emailSubjectLine = 'Reset Password';
-   verifyEmailConfig.emailMessage = 'Custom reset password message goes here. Reset password link will be auto-generated.';
+   verifyEmailConfig.emailMessage = 'Custom reset password message goes here. Reset password link will be generated.';
    ```
 
 Create a `.env` file to store a list of environmental variables needed for this module to run. These are **required.**
 
    ```js
+   // replace mock credentials with your own
+
    MONGODB_URI=mongodb+srv://jdoe:password@cluster0.d312b.mongodb.net/loginjs?retryWrites=true&w=majority
    JWT_SECRET=xyzjwtsec3874r3t
    EMAIL_FROM_USER=support@loginjs.com
@@ -172,23 +176,23 @@ Create a `.env` file to store a list of environmental variables needed for this 
 
 - Client email verification
 
-- Reset password email sent to client
+- Reset password email sent to the client
 
-- Verify email sent to client
+- Verify email sent to the client
 
 ## MongoDB Setup
 
-Login.js integrates with MongoDB. Before running Login.js module, be sure to lauch a MongoDB server and provide its URI as an environment variable in `.env` file (discussed above).
+Login.js integrates with MongoDB. Before running the Login.js module, be sure to launch a MongoDB server and provide its URI as an environment variable in `.env` file (discussed above).
 
 Alternatively, I recommend setting up a [MongoDB Cloud Cluster.](https://www.mongodb.com/cloud)
 
 ## Security Issues
 
-If you discover a security vulnerability or would like to help me improve Login.js, please email me. Alternatively, submit a pull request at this project's github, and we'll go from there. Thank you for your support.
+If you discover a security vulnerability or would like to help me improve Login.js, please email me. Alternatively, submit a pull request at this project's Github, and we'll go from there. Thank you for your support.
 
 ## API Endpoints
 
-To test these endpoints, I would higly recommend using Postman as per illustrations and other details below.
+To test these endpoints, I would highly recommend using Postman as per illustrations and other details below.
 
 Register Client
 
@@ -231,7 +235,7 @@ Reset Password
 Register Client
 
 ```js
-// a 'verify your email address' link is sent via email to the client which contains the 'verifyEmailToken' in the URL
+// a 'verify your email address' link, which contains the 'verifyEmailToken' in the URL, is sent via email to the client
 
 // req object (sent from client to server)
 
@@ -253,7 +257,7 @@ res.json({
 Get Authorized Client
 
 ```js
-// token (from above) sent back to server via http headers for client authorization and access to private routes
+// token (from above) sent back to the server via http headers for client authorization and access to private routes
 
 axios.defaults.headers.common['x-auth-token'] = token;
 ```
@@ -261,7 +265,7 @@ axios.defaults.headers.common['x-auth-token'] = token;
 Sign In Client
 
 ```js
-// if unverified, a 'verify your email address' link is sent via email to the client which contains the 'verifyEmailToken' in the URL
+// if the client's email address remains unverified, a 'verify your email address' link, which contains the 'verifyEmailToken' in the URL, is sent via email to the client
 
 // req object (sent from client to server)
 
@@ -283,7 +287,7 @@ res.json({
 Verify Email
 
 ```js
-// note: 'verifyEmailToken' inside req.body directly below is from the email to client (see comments above) and it's the same token as above
+// note: 'verifyEmailToken' inside req.body directly below is from the email to the client (see comments above), and it's the same token as above
 
 // req object (sent from client to server)
 
@@ -310,7 +314,7 @@ req.body = {
 ```
 
 ```js
-// a reset-password link is sent via email to the client which contains the 'resetToken' in the URL
+// a reset-password link, which contains the 'resetToken' in the URL, is sent via email to the client
 
 // res object (returned to client from server)
 
@@ -343,7 +347,7 @@ res.json({
 Register Client
 
 ```text
-Shows the req object with client's name, email, and password sent to the server, and res object with the token is returned.
+Shows the req object with the client's name, email, and password sent to the server, and it shows the res object returned with the token.
 ```
 
 ![register-client](https://user-images.githubusercontent.com/5770541/97674924-bcb59280-1a64-11eb-98b7-b81d9748d2bd.png)
@@ -351,7 +355,7 @@ Shows the req object with client's name, email, and password sent to the server,
 Get Authorized Client Information
 
 ```text
-Shows x-auth-token and its value set in the headers, and res object with the client details is returned.
+Shows x-auth-token and its value set in the headers, and it shows the res object returned with the client details.
 ```
 
 ![get-auth-client](https://user-images.githubusercontent.com/5770541/97674969-cf2fcc00-1a64-11eb-9458-14c139998a37.png)
@@ -359,7 +363,7 @@ Shows x-auth-token and its value set in the headers, and res object with the cli
 Sign In Client
 
 ```text
-Shows the req object sent with the client email and password to the server, and res object with the token is returned.
+Shows the req object sent with the client email and password to the server, and it shows the res object returned with the token.
 ```
 
 ![signin-client](https://user-images.githubusercontent.com/5770541/97674986-d48d1680-1a64-11eb-923f-7e4e99ecf4b2.png)
@@ -367,7 +371,7 @@ Shows the req object sent with the client email and password to the server, and 
 Verify Email Address
 
 ```text
-Shows the req object sent with 'verifyEmailToken' to the server, and res object with a msg to the client is returned.
+Shows the req object sent with the 'verifyEmailToken' to the server, and it shows the res object returned with a msg to the client.
 ```
 
 ![verify-email](https://user-images.githubusercontent.com/5770541/97675005-db1b8e00-1a64-11eb-8caa-b7247895ac5b.png)
@@ -375,7 +379,7 @@ Shows the req object sent with 'verifyEmailToken' to the server, and res object 
 Forgot Password
 
 ```text
-Shows the req object sent with the client email to the server, and res object with a msg to the client is returned.
+Shows the req object sent with the client email to the server, and it shows the res object returned with a msg to the client.
 ```
 
 ![forgot-password](https://user-images.githubusercontent.com/5770541/97675034-ebcc0400-1a64-11eb-8e79-f61305b88bc8.png)
@@ -383,7 +387,7 @@ Shows the req object sent with the client email to the server, and res object wi
 Reset Password
 
 ```text
-Shows the req object sent with 'resetToken' and client's 'newPassword' to the server, and res object with a msg to the client is returned.
+Shows the req object sent with the 'resetToken' and client's 'newPassword' to the server, and it shows the res object returned with a msg to the client.
 ```
 
 ![reset-password](https://user-images.githubusercontent.com/5770541/97675039-ed95c780-1a64-11eb-80dd-4e7e8dcc9f53.png)
