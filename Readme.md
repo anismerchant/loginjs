@@ -102,7 +102,7 @@ If you prefer quick access to only the login functionality without the reset pas
 Create an `index.js` file, and paste the starter code shown below inside of it.
 
    ```js
-   const loginJS = require('./index');
+   const loginJS = require('loginjs');
    const createLogin = loginJS.createLogin;
 
    // required
