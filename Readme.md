@@ -67,9 +67,9 @@ Create an `index.js` file, and paste the starter code shown below inside of it.
    ); // in seconds
 
    // optional
-   verifyEmailConfig.emailHeading = 'Your Company Name';
+   verifyEmailConfig.emailHeading = 'Your Custom Heading';
    verifyEmailConfig.emailSubjectLine = 'Your Custom Subject Line';
-   verifyEmailConfig.emailMessage = 'Your custom reset password message goes here. Reset password link will be generated and placed below your custom message.';
+   verifyEmailConfig.emailMessage = 'Your custom verify email message goes here. Verify email link will be generated and placed below your custom message.';
    ```
 
 Create a `.env` file to store a list of environmental variables needed for this module to run.
@@ -138,9 +138,9 @@ Create an `index.js` file, and paste the starter code shown below inside of it.
    ```
 
    ```js
-   verifyEmailConfig.emailHeading = 'Your Company Name';
-   verifyEmailConfig.emailSubjectLine = 'Reset Password';
-   verifyEmailConfig.emailMessage = 'Custom reset password message goes here. Reset password link will be generated.';
+   verifyEmailConfig.emailHeading = 'Your Custom Heading';
+   verifyEmailConfig.emailSubjectLine = 'Your Custom Subject Line';
+   verifyEmailConfig.emailMessage = 'Your custom verify email message goes here. Verify email link will be generated and placed below your custom message.';
    ```
 
 Create a `.env` file to store a list of environmental variables needed for this module to run. These are **required.**
