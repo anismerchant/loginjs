@@ -1,5 +1,5 @@
 {
-  "name": "loginjs-express",
+  "name": "login-express",
   "version": "1.0.0",
   "description": "Generates node.js user signup & login system",
   "main": "index.js",
@@ -12,11 +12,10 @@
     "url": "git+https://github.com/anismerchant/loginjs.git"
   },
   "keywords": [
-    "login back-end",
-    "sign up back-end",
-    "create account",
-    "authenticate account",
-    "login.js"
+    "login",
+    "sign up",
+    "login.js",
+    "back-end"
   ],
   "author": "Anis Merchant",
   "license": "MIT",

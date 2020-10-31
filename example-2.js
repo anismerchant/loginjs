@@ -1,4 +1,4 @@
-const loginJS = require('./index');
+const loginJS = require('login-express');
 const createLogin = loginJS.createLogin;
 
 // required

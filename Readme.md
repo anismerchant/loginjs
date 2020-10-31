@@ -11,7 +11,7 @@ For brand new projects, be sure to create a `package.json` first with the [`npm 
 Next, run the following command in your terminal:
 
 ```bash
-npm install loginjs
+npm i login-express
 ```
 
 ## Quick Setup
@@ -19,7 +19,7 @@ npm install loginjs
 Create an `index.js` file, and paste the starter code shown below inside of it.
 
    ```js
-   const loginJS = require('loginjs');
+   const loginJS = require('login-express');
 
    // required
    const loginConfig = {
@@ -104,7 +104,7 @@ If you prefer quick access to only the login functionality without the reset pas
 Create an `index.js` file, and paste the starter code shown below inside of it.
 
    ```js
-   const loginJS = require('loginjs');
+   const loginJS = require('login-express');
    const createLogin = loginJS.createLogin;
 
    // required
