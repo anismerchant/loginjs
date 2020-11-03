@@ -89,7 +89,7 @@ These are **required**:
    EMAIL_SECURE=true
    ```
 
-   These are **optional** should you need to change default values included in Login.js. If so, please add the following to your `index.js`:
+   These are **optional**:
 
    ```js
    JWT_SESSION_EXPIRATION = 3600; // default value inside Login.js module set 7200 (seconds)
@@ -143,26 +143,28 @@ Create an `index.js` file, and paste the starter code shown below inside of it.
    verifyEmailConfig.emailMessage = 'Your custom verify email message goes here. Verify email link will be generated and placed below your custom message.';
    ```
 
-Create a `.env` file to store a list of environmental variables needed for this module to run. These are **required.**
+Create a `.env` file to store a list of environmental variables needed for this module to run.
 
-   ```js
-   // replace mock credentials with your own
+These are **required**:
 
-   MONGODB_URI=mongodb+srv://jdoe:password@cluster0.d312b.mongodb.net/loginjs?retryWrites=true&w=majority
-   JWT_SECRET=xyzjwtsec3874r3t
-   EMAIL_FROM_USER=support@loginjs.com
-   EMAIL_FROM_PASS=hky34KTcyTyz18
-   EMAIL_HOST=smtp.zoho.com
-   EMAIL_PORT=465
-   EMAIL_SECURE=true
-   ```
+```js
+// replace mock credentials with your own
 
-   These are **optional**:
+MONGODB_URI=mongodb+srv://jdoe:password@cluster0.d312b.mongodb.net/loginjs?retryWrites=true&w=majority
+JWT_SECRET=xyzjwtsec3874r3t
+EMAIL_FROM_USER=support@loginjs.com
+EMAIL_FROM_PASS=hky34KTcyTyz18
+EMAIL_HOST=smtp.zoho.com
+EMAIL_PORT=465
+EMAIL_SECURE=true
+```
 
-   ```js
-   JWT_SESSION_EXPIRATION = 3600; // default value inside Login.js module set to 7200 (seconds)
-   ACCOUNT_PWD_LENGTH = 10; // default value inside Login.js module set to 8
-   ```
+These are **optional**:
+
+```js
+JWT_SESSION_EXPIRATION = 3600; // default value inside Login.js module set to 7200 (seconds)
+ACCOUNT_PWD_LENGTH = 10; // default value inside Login.js module set to 8
+```
 
 ## Features
 
