@@ -16,7 +16,7 @@ npm i login-express
 
 ## Quick Setup
 
-Create an `index.js` file, and just below your main express server setup, paste the starter code shown below inside of it as illustrated below
+Create an `index.js` file, and paste the starter code as shown below. It assumes you've using Express.js.
 
    ```js
    const express = require('express');
