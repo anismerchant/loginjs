@@ -9,17 +9,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const dbConfig = {
-	mongodbURI: process.env.MONGODB_URI,
-	jwtSecret: process.env.JWT_SECRET,
+  mongodbURI: process.env.MONGODB_URI,
+  jwtSecret: process.env.JWT_SECRET,
 };
 
 const appConfig = {
-	jwtResetSecret: process.env.JWT_RESET_SECRET,
-	emailFromUser: process.env.EMAIL_FROM_USER,
-	emailFromPass: process.env.EMAIL_FROM_PASS,
-	emailHost: process.env.EMAIL_HOST,
-	emailPort: process.env.EMAIL_PORT,
-	emailSecure: process.env.EMAIL_SECURE,
+  jwtResetSecret: process.env.JWT_RESET_SECRET,
+  emailFromUser: process.env.EMAIL_FROM_USER,
+  emailFromPass: process.env.EMAIL_FROM_PASS,
+  emailHost: process.env.EMAIL_HOST,
+  emailPort: process.env.EMAIL_PORT,
+  emailSecure: process.env.EMAIL_SECURE,
 };
 
 loginJS(dbConfig, appConfig, app, express);
