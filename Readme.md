@@ -56,7 +56,6 @@ Create an `index.js` file, and paste the starter code as shown below. It assumes
    dbConfig.jwtSessionExpiration = parseInt(process.env.JWT_SESSION_EXPIRATION); // in seconds
    appConfig.jwtResetExpiration = parseInt(process.env.JWT_RESET_EXPIRATION); // in seconds
 
-
    // optional (3rd parameter)
    let verifyEmailConfig = {
      emailHeading: 'Your Company Name',
@@ -72,7 +71,7 @@ Create an `index.js` file, and paste the starter code as shown below. It assumes
    };
 
    // With custom verify email and reset email
-   loginJS(dbConfig, appConfig, app, express, verifyEmailConfig,resetEmailConfig);
+   loginJS(dbConfig, appConfig, app, express, verifyEmailConfig, resetEmailConfig);
 
    // With only custom verify email
    loginJS(dbConfig, appConfig, app, express, verifyEmailConfig);
@@ -116,7 +115,6 @@ const loginJS = require('login-express');
 // middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 
 const dbConfig = {
   mongodbURI: process.env.MONGODB_URI,
