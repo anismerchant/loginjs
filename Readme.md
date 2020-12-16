@@ -1,6 +1,6 @@
 # Login.js
 
-Minimalist module built to set up a secure back-end express login system in record speed.
+Minimalist module built to set up a secure back-end express login system in record speed. Login.js seemlessly adds to your existing express server and sets up secure login routes.
 
 ## Installation
 
@@ -16,60 +16,69 @@ npm i login-express
 
 ## Quick Setup
 
-Create an `index.js` file, and paste the starter code shown below inside of it.
+Create an `index.js` file, and just below your main express server setup, paste the starter code shown below inside of it as illustrated below
 
    ```js
+   const express = require('express');
+   const app = express();
    const loginJS = require('login-express');
 
+   // middleware
+   app.use(express.urlencoded({ extended: true }));
+   app.use(express.json());
+
    // required
-   const loginConfig = {
-   mongodbURI: process.env.MONGODB_URI,
-   jwtSecret: process.env.JWT_SECRET,
+   const dbConfig = {
+     mongodbURI: process.env.MONGODB_URI,
+     jwtSecret: process.env.JWT_SECRET,
    };
 
    // required
-   const resetConfig = {
-   jwtResetSecret: process.env.JWT_RESET_SECRET,
-   emailFromUser: process.env.EMAIL_FROM_USER,
-   emailFromPass: process.env.EMAIL_FROM_PASS,
-   emailHost: process.env.EMAIL_HOST,
-   emailPort: process.env.EMAIL_PORT,
-   emailSecure: process.env.EMAIL_SECURE,
+   const appConfig = {
+     jwtResetSecret: process.env.JWT_RESET_SECRET,
+     emailFromUser: process.env.EMAIL_FROM_USER,
+     emailFromPass: process.env.EMAIL_FROM_PASS,
+     emailHost: process.env.EMAIL_HOST,
+     emailPort: process.env.EMAIL_PORT,
+     emailSecure: process.env.EMAIL_SECURE,
    };
-
-   // required
-   const verifyEmailConfig = {
-   emailFromUser: process.env.EMAIL_FROM_USER,
-   emailFromPass: process.env.EMAIL_FROM_PASS,
-   emailHost: process.env.EMAIL_HOST,
-   emailPort: process.env.EMAIL_PORT,
-   emailSecure: process.env.EMAIL_SECURE,
-   }
 
    // Insert optional customization here if you need it (see below).
 
-  loginJS(loginConfig, resetConfig, verifyEmailConfig);
+   loginJS(dbConfig, appConfig, app, express[, options]);
    ```
 
    These are **optional** should you need to change default values included in Login.js. If so, please add the following to your `index.js`:
 
    ```js
    // optional
-   resetConfig.jwtResetExpiration = parseInt(process.env.JWT_RESET_EXPIRATION); // in seconds
-   resetConfig.emailHeading = 'Your Custom Heading';
-   resetConfig.emailSubjectLine = 'Your Custom Subject Line';
-   resetConfig.emailMessage ='Your custom reset password message goes here. Reset password link will be generated and placed below your custom message.';
+   dbConfig.passwordLength = parseInt(process.env.ACCOUNT_PWD_LENGTH); // positive integer
+   dbConfig.jwtSessionExpiration = parseInt(process.env.JWT_SESSION_EXPIRATION); // in seconds
+   appConfig.jwtResetExpiration = parseInt(process.env.JWT_RESET_EXPIRATION); // in seconds
 
-   // optional
-   loginConfig.passwordLength = parseInt(process.env.ACCOUNT_PWD_LENGTH); // positive integer
-   loginConfig.jwtSessionExpiration = parseInt(
-   process.env.JWT_SESSION_EXPIRATION
-   ); // in seconds
 
-   // optional
-   verifyEmailConfig.emailHeading = 'Your Custom Heading';
-   verifyEmailConfig.emailSubjectLine = 'Your Custom Subject Line';
-   verifyEmailConfig.emailMessage = 'Your custom verify email message goes here. Verify email link will be generated and placed below your custom message.';
+   // optional (3rd parameter)
+   let verifyEmailConfig = {
+     emailHeading: 'Your Company Name',
+     emailSubjectLine: 'Verify Password',
+     emailMessage: 'Custom verify password message goes here. Verify link is auto-generated.',
+   };
+
+   // Optional (4th parameter)
+   let resetEmailConfig = {
+     emailHeading: 'Your Company Name',
+     emailSubjectLine: 'Reset Password',
+     emailMessage: 'Custom reset password message goes here. Reset link is auto-generated.',
+   };
+
+   // With custom verify email and reset email
+   loginJS(dbConfig, appConfig, app, express, verifyEmailConfig,resetEmailConfig);
+
+   // With only custom verify email
+   loginJS(dbConfig, appConfig, app, express, verifyEmailConfig);
+
+   // With only custom reset email
+   loginJS(dbConfig, appConfig, app, express, verifyEmailConfig={}, resetEmailConfig);
    ```
 
 Create a `.env` file to store a list of environmental variables needed for this module to run.
@@ -97,73 +106,38 @@ These are **required**:
    ACCOUNT_PWD_LENGTH = 10; // default value inside Login.js module set to 8
    ```
 
-## Stand-alone Login System Quick Setup
-
-If you prefer quick access to only the login functionality without the reset password feature, then the setup is as follows:
-
-Create an `index.js` file, and paste the starter code shown below inside of it.
-
-   ```js
-   const loginJS = require('login-express');
-   const createLogin = loginJS.createLogin;
-
-   // required
-   const loginConfig = {
-   mongodbURI: process.env.MONGODB_URI,
-   jwtSecret: process.env.JWT_SECRET,
-   };
-
-   // required
-   const verifyEmailConfig = {
-   emailFromUser: process.env.EMAIL_FROM_USER,
-   emailFromPass: process.env.EMAIL_FROM_PASS,
-   emailHost: process.env.EMAIL_HOST,
-   emailPort: process.env.EMAIL_PORT,
-   emailSecure: process.env.EMAIL_SECURE,
-   }
-
-   // Insert optional customization here if you need it (see below).
-
-   // Login system without reset password feature
-   createLogin(loginConfig, verifyEmailConfig, launchApp = true);
-   ```
-
-   These are **optional** should you need to change default values included in Login.js. If so, please add the following to your `index.js`:
-
-   ```js
-   loginConfig.passwordLength = parseInt(process.env.ACCOUNT_PWD_LENGTH); // positive integer
-   loginConfig.jwtSessionExpiration = parseInt(
-   process.env.JWT_SESSION_EXPIRATION
-   ); // in seconds
-   ```
-
-   ```js
-   verifyEmailConfig.emailHeading = 'Your Custom Heading';
-   verifyEmailConfig.emailSubjectLine = 'Your Custom Subject Line';
-   verifyEmailConfig.emailMessage = 'Your custom verify email message goes here. Verify email link will be generated and placed below your custom message.';
-   ```
-
-Create a `.env` file to store a list of environmental variables needed for this module to run.
-
-These are **required**:
+## Setup Example
 
 ```js
-// replace mock credentials with your own
+const express = require('express');
+const app = express();
+const loginJS = require('login-express');
 
-MONGODB_URI=mongodb+srv://jdoe:password@cluster0.d312b.mongodb.net/loginjs?retryWrites=true&w=majority
-JWT_SECRET=xyzjwtsec3874r3t
-EMAIL_FROM_USER=support@loginjs.com
-EMAIL_FROM_PASS=hky34KTcyTyz18
-EMAIL_HOST=smtp.zoho.com
-EMAIL_PORT=465
-EMAIL_SECURE=true
-```
+// middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-These are **optional**:
 
-```js
-JWT_SESSION_EXPIRATION = 3600; // default value inside Login.js module set to 7200 (seconds)
-ACCOUNT_PWD_LENGTH = 10; // default value inside Login.js module set to 8
+const dbConfig = {
+  mongodbURI: process.env.MONGODB_URI,
+  jwtSecret: process.env.JWT_SECRET,
+};
+
+const appConfig = {
+  jwtResetSecret: process.env.JWT_RESET_SECRET,
+  emailFromUser: process.env.EMAIL_FROM_USER,
+  emailFromPass: process.env.EMAIL_FROM_PASS,
+  emailHost: process.env.EMAIL_HOST,
+  emailPort: process.env.EMAIL_PORT,
+  emailSecure: process.env.EMAIL_SECURE,
+};
+
+loginJS(dbConfig, appConfig, app, express);
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
 ```
 
 ## Features
