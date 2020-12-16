@@ -3,13 +3,16 @@ const app = express();
 const helmet = require('helmet');
 const loginJS = require('login-express');
 
-// required
+// middleware
+app.use(helmet());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 const dbConfig = {
 	mongodbURI: process.env.MONGODB_URI,
 	jwtSecret: process.env.JWT_SECRET,
 };
 
-// required
 const appConfig = {
 	jwtResetSecret: process.env.JWT_RESET_SECRET,
 	emailFromUser: process.env.EMAIL_FROM_USER,
@@ -19,39 +22,7 @@ const appConfig = {
 	emailSecure: process.env.EMAIL_SECURE,
 };
 
-// Optional
-// dbConfig.passwordLength = parseInt(process.env.ACCOUNT_PWD_LENGTH); // positive integer
-// dbConfig.jwtSessionExpiration = parseInt(process.env.JWT_SESSION_EXPIRATION); // in seconds
-// appConfig.jwtResetExpiration = parseInt(process.env.JWT_RESET_EXPIRATION); // in seconds
-
-// Optional
-// let verifyEmailConfig = {
-// 	emailHeading: 'Your Company Name',
-// 	emailSubjectLine: 'Verify Password',
-// 	emailMessage:
-// 		'Custom verify password message goes here. Verify link auto-generated.',
-// };
-
-// Optional
-// let resetEmailConfig = {
-// 	emailHeading: 'Your Company Name',
-// 	emailSubjectLine: 'Reset Password',
-// 	emailMessage:
-// 		'Custom reset password message goes here. Reset link auto-generated.',
-// };
-
-app.use(helmet());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-loginJS(
-	dbConfig,
-	appConfig,
-	(verifyEmailConfig = {}),
-	(resetEmailConfig = {}),
-	app,
-	express
-);
+loginJS(dbConfig, appConfig, app, express);
 
 const PORT = process.env.PORT || 5000;
 
