@@ -6,4 +6,6 @@
 
 'use strict';
 
-module.exports = require('./lib/app')
+const loginJS = (module.exports = require('./lib/app'));
+loginJS.LoginManager = require('./lib/LoginManager');
+
