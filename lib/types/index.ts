@@ -12,7 +12,7 @@ export interface LoginExpressConfig {
   emailHost: string;
   mongoDbUri: string;
   clientBaseUrl: string;
-  emailPort: number;
+  emailPort?: number;
   emailSecure?: boolean;
   verifyEmailHeading?: string;
   verifyEmailSubjectLine?: string;

@@ -7,6 +7,8 @@
     "esModuleInterop": true,
     "outDir": "./dist",
     "rootDir": "./lib",
-    "strict": false
+    "strict": false,
+    "declaration": true,
+    "declarationMap": true
   }
 }

@@ -16,7 +16,7 @@ import {
 /**
  * Authentication Manager class.
  */
-class LoginExpress {
+export class LoginExpress {
   private config: LoginExpressConfig = {
     jwtSecret: '',
     jwtResetSecret: '',
@@ -398,5 +398,3 @@ class LoginExpress {
     };
   };
 }
-
-module.exports = LoginExpress;
