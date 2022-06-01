@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "allowJs": true,
+    "checkJs": false,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "rootDir": "./lib",
+    "strict": false
+  }
+}

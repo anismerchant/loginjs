@@ -1,96 +1,82 @@
-const gravatar = require('gravatar');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const connectDB = require('./config/db');
-const sendMail = require('./helper/sendMail');
-const User = require('./models/User');
+import gravatar from 'gravatar';
+import bcrypt from 'bcryptjs';
+import { JwtPayload, sign, verify } from 'jsonwebtoken';
+import connectDB from './config/db';
+import sendMail from './helper/sendMail';
+import User from './models/User';
+import { Response, NextFunction } from 'express';
+import {
+  AuthRequest,
+  ChangePasswordBody,
+  LoginBody,
+  LoginExpressConfig,
+  RegisterBody,
+} from './types';
 
 /**
  * Authentication Manager class.
  */
 class LoginExpress {
+  private config: LoginExpressConfig = {
+    jwtSecret: '',
+    jwtResetSecret: '',
+    emailFromUser: '',
+    emailFromPass: '',
+    emailHost: '',
+    mongoDbUri: '',
+    clientBaseUrl: '',
+    emailPort: 465,
+    emailSecure: true,
+    verifyEmailHeading: '',
+    verifyEmailSubjectLine: '',
+    verifyEmailMessage: '',
+    verifyEmailRedirect: '/verify-email',
+    resetEmailHeading: '',
+    resetEmailSubjectLine: '',
+    resetEmailMessage: '',
+    resetEmailRedirect: '/reset-password',
+    passwordLength: 8,
+    jwtSessionExpiration: 7200,
+    jwtResetExpiration: 900,
+  };
   /**
    * Validate config object, initialize variables and connect to database.
    */
-  constructor({
-    jwtSecret,
-    jwtResetSecret,
-    emailFromUser,
-    emailFromPass,
-    emailHost,
-    mongoDbUri,
-    clientBaseUrl,
-    emailPort = 465,
-    emailSecure = true,
-    verifyEmailHeading = '',
-    verifyEmailSubjectLine = '',
-    verifyEmailMessage = '',
-    verifyEmailRedirect = '/verify-email',
-    resetEmailHeading = '',
-    resetEmailSubjectLine = '',
-    resetEmailMessage = '',
-    resetEmailRedirect = '/reset-password',
-    passwordLength = 8,
-    jwtSessionExpiration = 7200,
-    jwtResetExpiration = 900,
-  }) {
+  constructor(config: LoginExpressConfig) {
     // validate config
     if (
-      !Number.isInteger(passwordLength) ||
-      !Number.isInteger(jwtSessionExpiration)
-    ) {
-      throw new Error(
-        '"passwordLength" and "jwtSessionExpiration" must be positive integers.'
-      );
-    }
-    if (passwordLength < 0 || jwtSessionExpiration < 0) {
-      throw new Error(
-        '"passwordLength" and "jwtSessionExpiration" must be positive integers.'
-      );
-    }
-    if (
-      !jwtSecret ||
-      !jwtResetSecret ||
-      !emailFromUser ||
-      !emailFromPass ||
-      !emailHost ||
-      !mongoDbUri ||
-      !clientBaseUrl
+      !config.jwtSecret ||
+      !config.jwtResetSecret ||
+      !config.emailFromUser ||
+      !config.emailFromPass ||
+      !config.emailHost ||
+      !config.mongoDbUri ||
+      !config.clientBaseUrl
     ) {
       throw new Error(
         'Missing required config. Make sure you have the following in your config object: jwtSecret, jwtResetSecret, emailFromUser, emailFromPass, emailHost, mongoDbUri, clientBaseUrl'
       );
     }
+    if (config.passwordLength && config.passwordLength < 0) {
+      throw new Error(
+        '"passwordLength" must be a positive integer (ie. greater than 0).'
+      );
+    }
+    if (config.jwtSessionExpiration && config.jwtSessionExpiration < 0) {
+      throw new Error('"jwtSessionExpiration" must be positive integers.');
+    }
 
     // assign class variables
-    this.jwtSecret = jwtSecret;
-    this.jwtResetSecret = jwtResetSecret;
-    this.emailFromUser = emailFromUser;
-    this.emailFromPass = emailFromPass;
-    this.emailHost = emailHost;
-    this.emailPort = emailPort;
-    this.emailSecure = emailSecure;
-    this.clientBaseUrl = clientBaseUrl;
-    this.verifyEmailHeading = verifyEmailHeading;
-    this.verifyEmailSubjectLine = verifyEmailSubjectLine;
-    this.verifyEmailMessage = verifyEmailMessage;
-    this.verifyEmailRedirect = verifyEmailRedirect;
-    this.resetEmailHeading = resetEmailHeading;
-    this.resetEmailSubjectLine = resetEmailSubjectLine;
-    this.resetEmailMessage = resetEmailMessage;
-    this.resetEmailRedirect = resetEmailRedirect;
-    this.passwordLength = passwordLength;
-    this.jwtSessionExpiration = jwtSessionExpiration;
-    this.jwtResetExpiration = jwtResetExpiration;
+    this.config = { ...this.config, ...config };
 
     // connect to database
-    connectDB(mongoDbUri);
+    connectDB(config.mongoDbUri);
   }
 
   /**
    * Express middleware. Validates user and adds user to req object.
    */
-  isLoggedIn = async (req, res, next) => {
+  isLoggedIn = async (req: AuthRequest, res: Response, next: NextFunction) => {
     // check if cookies exist
     const cookies = req.headers.cookie;
     if (!cookies) {
@@ -108,7 +94,8 @@ class LoginExpress {
         if (name && value && name === 'session') {
           // get user from database based on user id in jwt token
           try {
-            const payload = jwt.verify(value, this.jwtSecret);
+            const payload = verify(value, this.config.jwtSecret) as JwtPayload;
+            if (!payload) throw new Error('Invalid JWT payload.');
             user = await this.getUser(payload.user.id);
           } catch (err) {
             console.error(err);
@@ -134,7 +121,7 @@ class LoginExpress {
    * Returns a user based on user id.
    * Sensitive fields are omitted such as passwords and tokens.
    */
-  getUser = async (id) => {
+  getUser = async (id: string) => {
     return await User.findById(id).select(
       '-password -verifyEmailToken -resetToken'
     );
@@ -143,7 +130,7 @@ class LoginExpress {
   /**
    * Registers a user with given name, email and password.
    */
-  register = async ({ name, email, password }) => {
+  register = async ({ name, email, password }: RegisterBody) => {
     try {
       // check if user exists
       let user = await User.findOne({ email });
@@ -178,12 +165,11 @@ class LoginExpress {
       };
 
       // sign the token with payload and secret
-      const token = jwt.sign(payload, this.jwtSecret, {
-        expiresIn: this.jwtSessionExpiration, // in seconds
+      const token = sign(payload, this.config.jwtSecret, {
+        expiresIn: this.config.jwtSessionExpiration, // in seconds
       });
 
       // update user with verification token
-      console.log(token);
       user.verifyEmail = false;
       user.verifyEmailToken = token;
 
@@ -191,7 +177,7 @@ class LoginExpress {
       await user.save();
 
       // create email template
-      const redirect = `${this.clientBaseUrl}${this.verifyEmailRedirect}`;
+      const redirect = `${this.config.clientBaseUrl}${this.config.verifyEmailRedirect}`;
       const defaultLink = `<h4><a href="${redirect}/${token}">Verify Email Address</a></h4>`;
       const defaultMessage = `
         <div style="margin: auto; width: 40%; padding: 10px">
@@ -208,14 +194,14 @@ class LoginExpress {
         defaultLink,
         defaultMessage,
         defaultSubjectLine,
-        this.emailFromUser,
-        this.emailFromPass,
-        this.verifyEmailHeading,
-        this.verifyEmailSubjectLine,
-        this.emailHost,
-        this.emailPort,
-        this.emailSecure,
-        this.verifyEmailMessage
+        this.config.emailFromUser,
+        this.config.emailFromPass,
+        this.config.verifyEmailHeading,
+        this.config.verifyEmailSubjectLine,
+        this.config.emailHost,
+        this.config.emailPort,
+        this.config.emailSecure,
+        this.config.verifyEmailMessage
       );
     } catch (err) {
       console.error(err);
@@ -226,7 +212,7 @@ class LoginExpress {
   /**
    * Verifies user with given verification token.
    */
-  verify = async (token) => {
+  verify = async (token: string) => {
     // token is missing
     if (!token) {
       throw new Error('Authentication Error.');
@@ -235,7 +221,7 @@ class LoginExpress {
     // get user from token
     let user;
     try {
-      const payload = jwt.verify(token, this.jwtSecret);
+      const payload = verify(token, this.config.jwtSecret) as JwtPayload;
       user = await User.findById(payload.user.id);
     } catch (err) {
       console.error(err);
@@ -270,7 +256,7 @@ class LoginExpress {
   /**
    * Logs in user with given email and password and returns a session token.
    */
-  login = async ({ res, email, password }) => {
+  login = async ({ res, email, password }: LoginBody) => {
     try {
       // validate email
       let user = await User.findOne({ email });
@@ -290,15 +276,16 @@ class LoginExpress {
           id: user.id,
         },
       };
-      const token = jwt.sign(payload, this.jwtSecret, {
-        expiresIn: this.jwtSessionExpiration,
+      const token = sign(payload, this.config.jwtSecret, {
+        expiresIn: this.config.jwtSessionExpiration,
       });
 
       // set token as session cookie on res object
       res.cookie('session', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: this.jwtSessionExpiration * 1000,
+        sameSite: process.env.NODE_ENV === 'production',
+        maxAge: this.config.jwtSessionExpiration! * 1000,
       });
     } catch (err) {
       console.error(err);
@@ -310,7 +297,7 @@ class LoginExpress {
    * Generates a reset token for user with given email and sends them an email
    * with a link to the password reset form.
    */
-  resetPassword = async (email) => {
+  resetPassword = async (email: string) => {
     // get user with email
     let user = await User.findOne({ email });
     if (!user) {
@@ -323,8 +310,8 @@ class LoginExpress {
         id: user.id,
       },
     };
-    const token = jwt.sign(payload, this.jwtResetSecret, {
-      expiresIn: this.jwtResetExpiration, // in seconds
+    const token = sign(payload, this.config.jwtResetSecret, {
+      expiresIn: this.config.jwtResetExpiration, // in seconds
     });
 
     // add token to user
@@ -332,13 +319,13 @@ class LoginExpress {
     await user.save();
 
     // generate email template
-    const redirect = `${this.clientBaseUrl}${this.resetEmailRedirect}`;
+    const redirect = `${this.config.clientBaseUrl}${this.config.resetEmailRedirect}`;
     const defaultLink = `<h4><a href="${redirect}/${token}">Reset Password</a></h4>`;
     const defaultMessage = `
       <div style="margin: auto; width: 40%; padding: 10px">
         <h2>Password Assistance</h2>
         <p>To authenticate, please click on the Reset Password link below. It will expire in ${Math.floor(
-          this.jwtResetExpiration / 60
+          this.config.jwtResetExpiration! / 60
         )} minutes.</p>
         ${defaultLink}
         <p>Do not share this link with anyone. We take your account security very seriously. We will never ask you to disclose or verify your password, OTP, credit card, or banking account number. If you receive a suspicious email with a link to update your account information, do not click on the link. Instead, notify us immediately and share the email with us for investigation.</p>
@@ -352,37 +339,40 @@ class LoginExpress {
       defaultLink,
       defaultMessage,
       defaultSubjectLine,
-      this.emailFromUser,
-      this.emailFromPass,
-      this.resetEmailHeading,
-      this.resetEmailSubjectLine,
-      this.emailHost,
-      this.emailPort,
-      this.emailSecure,
-      this.resetEmailMessage
+      this.config.emailFromUser,
+      this.config.emailFromPass,
+      this.config.resetEmailHeading,
+      this.config.resetEmailSubjectLine,
+      this.config.emailHost,
+      this.config.emailPort,
+      this.config.emailSecure,
+      this.config.resetEmailMessage
     );
   };
 
   /**
    * Changes a user's password to a new password.
    */
-  changePassword = async ({ resetToken, newPassword }) => {
+  changePassword = async ({ resetToken, newPassword }: ChangePasswordBody) => {
     // validate params
     if (!resetToken || !newPassword) {
       throw new Error('Authentication Error.');
     }
 
     // check password length
-    if (newPassword.length < this.passwordLength) {
+    if (newPassword.length < this.config.passwordLength!) {
       throw new Error(
-        `Password must be at least ${this.passwordLength} characters.`
+        `Password must be at least ${this.config.passwordLength} characters.`
       );
     }
 
     // find user with reset token
     let user;
     try {
-      const payload = jwt.verify(resetToken, this.jwtResetSecret);
+      const payload = verify(
+        resetToken,
+        this.config.jwtResetSecret
+      ) as JwtPayload;
       user = await User.findOne({ _id: payload.user.id });
     } catch (err) {
       console.error(err);
