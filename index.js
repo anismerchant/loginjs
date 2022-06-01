@@ -7,5 +7,4 @@
 'use strict';
 
 const loginJS = (module.exports = require('./lib/app'));
-loginJS.LoginManager = require('./lib/LoginBuilder');
-
+loginJS.LoginExpress = require('./lib/LoginExpress');
