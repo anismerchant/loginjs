@@ -9,7 +9,7 @@
     "build": "tsc",
     "start": "npm run build && node dist/index.js",
     "server": "nodemon index",
-    "prepublish": "tsc"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
