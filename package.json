@@ -8,7 +8,8 @@
     "dev": "tsc -w",
     "build": "tsc",
     "start": "npm run build && node dist/index.js",
-    "server": "nodemon index"
+    "server": "nodemon index",
+    "prepublish": "tsc"
   },
   "repository": {
     "type": "git",
