@@ -4,6 +4,10 @@
   "description": "Generates node.js user signup & login system",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "lib"
+  ],
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
