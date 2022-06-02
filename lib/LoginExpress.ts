@@ -78,7 +78,7 @@ export class LoginExpress {
    */
   isLoggedIn = async (req: AuthRequest, res: Response, next: NextFunction) => {
     // check if cookies exist
-    const cookies = req.headers.cookie;
+    const cookies = req.header('cookie');
     if (!cookies) {
       res.status(401).send('Authentication failed.');
       return;

@@ -10,5 +10,6 @@
     "strict": false,
     "declaration": true,
     "declarationMap": true
-  }
+  },
+  "exclude": ["dist"]
 }
