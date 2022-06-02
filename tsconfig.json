@@ -9,7 +9,8 @@
     "rootDir": "./lib",
     "strict": false,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "typeRoots": ["./lib/types/express.d.ts"]
   },
   "exclude": ["dist"]
 }

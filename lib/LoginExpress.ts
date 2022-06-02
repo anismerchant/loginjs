@@ -4,9 +4,8 @@ import { JwtPayload, sign, verify } from 'jsonwebtoken';
 import connectDB from './config/db';
 import sendMail from './helper/sendMail';
 import User from './models/User';
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import {
-  AuthRequest,
   ChangePasswordBody,
   LoginBody,
   LoginExpressConfig,
@@ -76,9 +75,9 @@ export class LoginExpress {
   /**
    * Express middleware. Validates user and adds user to req object.
    */
-  isLoggedIn = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  isLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
     // check if cookies exist
-    const cookies = req.header('cookie');
+    const cookies = req.headers.cookie;
     if (!cookies) {
       res.status(401).send('Authentication failed.');
       return;
