@@ -1,13 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 
+export declare interface AuthRequest extends Request {
+  user?: string;
+}
+
 export declare interface LoginExpressConfig {
+  jwtSecret: string;
   jwtResetSecret: string;
   emailFromUser: string;
   emailFromPass: string;
   emailHost: string;
   mongoDbUri: string;
   mongoDbModelName: string;
-  mongoDbSchemaDefinition: string;
+  mongoDbSchemaDefinition: {};
   clientBaseUrl: string;
   emailPort?: 25 | 465 | 587 | 2525;
   emailSecure?: boolean;
