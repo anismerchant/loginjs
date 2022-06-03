@@ -1,6 +1,6 @@
 /*!
  * loginJS
- * Author: Anis Merchant <anisxmerchant@gmail.com>
+ * Contributors: Anis Merchant <anisxmerchant@gmail.com> and Freddy Shim <shimfreddy@gmail.com>
  * MIT Licensed
  */
 

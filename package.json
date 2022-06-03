@@ -18,7 +18,10 @@
     "login.js",
     "back-end"
   ],
-  "author": "Anis Merchant",
+  "contributors": [
+    "Anis Merchant",
+    "Freddy Shim"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/anismerchant/loginjs.git/issues"
