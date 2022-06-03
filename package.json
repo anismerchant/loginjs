@@ -3,6 +3,7 @@
   "version": "2.0.6",
   "description": "Generates node.js user signup & login system",
   "main": "index.js",
+  "types": "./types/index.d.ts",
   "scripts": {
     "start": "node index",
     "server": "nodemon index"
@@ -24,6 +25,7 @@
   },
   "homepage": "https://github.com/anismerchant/loginjs.git#readme",
   "dependencies": {
+    "@types/express": "^4.17.13",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "express-validator": "^6.6.1",
