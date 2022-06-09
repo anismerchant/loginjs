@@ -50,10 +50,12 @@ export declare interface ChangePasswordBody {
 export declare class LoginExpress {
   constructor(config: LoginExpressConfig);
   isLoggedIn(req: Request, res: Response, next: NextFunction): void;
+  isAdmin(req: Request, res: Response, next: NextFunction): void;
   getUser<T>(id: string): Promise<T>;
   register(options: RegisterBody): Promise<void>;
   verify(token: string): Promise<void>;
   login(options: LoginBody): Promise<void>;
+  logout(res: Response): void;
   resetPassword(email: string): Promise<void>;
   changePassword(options: ChangePasswordBody): Promise<void>;
 }
