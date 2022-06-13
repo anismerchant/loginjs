@@ -37,7 +37,6 @@ export declare interface RegisterBody {
 }
 
 export declare interface LoginBody {
-  res: Response;
   email: string;
   password: string;
 }
@@ -52,10 +51,11 @@ export declare class LoginExpress {
   isLoggedIn(req: Request, res: Response, next: NextFunction): void;
   isAdmin(req: Request, res: Response, next: NextFunction): void;
   getUser<T>(id: string): Promise<T>;
-  register(options: RegisterBody): Promise<void>;
+  register(res: Response, userInfo: RegisterBody): Promise<void>;
   verify(token: string): Promise<void>;
-  login(options: LoginBody): Promise<void>;
+  login(res: Response, userInfo: LoginBody): Promise<void>;
   logout(res: Response): void;
   resetPassword(email: string): Promise<void>;
   changePassword(options: ChangePasswordBody): Promise<void>;
+  createSession(res: Response, userId: string): void;
 }
