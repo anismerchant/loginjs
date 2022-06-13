@@ -15,7 +15,7 @@ export declare interface UserDocument extends Document {
 }
 
 export declare interface AuthRequest extends Request {
-  user: UserDocument;
+  user?: UserDocument;
 }
 
 export declare interface LoginExpressConfig {
