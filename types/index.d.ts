@@ -1,7 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
+import { Document } from 'mongoose';
+
+export declare interface UserDocument extends Document {
+  name: string;
+  email: string;
+  password: string;
+  avatar: string;
+  date: Date;
+  verifyEmail: boolean;
+  verifyEmailToken: string;
+  resetToken: string;
+  auth: string;
+  [key: string]: unknown;
+}
 
 export declare interface AuthRequest extends Request {
-  user?: string;
+  user: UserDocument;
 }
 
 export declare interface LoginExpressConfig {
@@ -55,7 +69,8 @@ export declare class LoginExpress {
   verify(token: string): Promise<void>;
   login(res: Response, userInfo: LoginBody): Promise<void>;
   logout(res: Response): void;
-  resetPassword(email: string): Promise<void>;
   changePassword(options: ChangePasswordBody): Promise<void>;
   createSession(res: Response, userId: string): void;
+  sendVerificationEmail(user: UserDocument): Promise<void>;
+  sendPasswordResetEmail(email: string): Promise<void>;
 }
