@@ -180,13 +180,16 @@ router.get('/user', loginJS.isLoggedIn, (req, res) => {
 router.post('/register', async (req, res) => {
   const { name, email, password } = req.body
   try {
-    await loginJS.register({
-      name,
-      email,
-      password,
-      customFieldOne: 'hello world',
-      customFieldTwo: 42
-    })
+    await loginJS.register(
+      res, 
+      {
+         name,
+         email,
+         password,
+         customFieldOne: 'hello world',
+         customFieldTwo: 42
+      }
+    )
     res.status(200).end()
   } catch (err) {
     res.status(400).send(err.message)
@@ -197,7 +200,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body
   try {
-    await loginJS.login({ res, email, password })
+    await loginJS.login(res, { email, password })
     res.status(200).end()
   } catch (err) {
     res.status(400).send(err.message)
