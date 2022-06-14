@@ -69,7 +69,7 @@ export declare class LoginExpress {
   verify(token: string): Promise<void>;
   login(res: Response, userInfo: LoginBody): Promise<void>;
   logout(res: Response): void;
-  changePassword(options: ChangePasswordBody): Promise<void>;
+  changePassword(res: Response, options: ChangePasswordBody): Promise<void>;
   createSession(res: Response, userId: string): void;
   sendVerificationEmail(user: UserDocument): Promise<void>;
   sendPasswordResetEmail(email: string): Promise<void>;
