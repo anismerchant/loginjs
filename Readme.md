@@ -138,14 +138,31 @@ app.listen(5000, () => console.log('Server started on port 5000'));
 
 ## Class-Based Login Manager
 
-The default function `loginJS` function automatically creates routes and user schemas for you. If you need more fine-tuned control over your Express server, then use the `LoginExpress` class instead:
+The default `loginJS` function automatically creates routes and user schemas for you. If you need more fine-tuned control over your Express server, then use the `LoginExpress` class instead:
 
 ```js
 const express = require('express')
+const mongoose = require('mongoose')
 const { LoginExpress } = require('login-express')
 
 // initialize express
 const app = express()
+
+// initialize db
+mongoose.connect(process.env.MONGODB_URI)
+const accountSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    avatar: { type: String, default: '' },
+    verifyEmail: { type: Boolean, default: false },
+    verifyEmailToken: { type: String, default: '' },
+    resetToken: { type: String, default: '' },
+    auth: { type: String, default: 'USER' },
+  }
+)
+const accountModel = mongoose.model('Account', accountSchema)
 
 // intialize login-express
 const loginJS = new LoginExpress({
@@ -154,17 +171,7 @@ const loginJS = new LoginExpress({
   emailFromUser: process.env.EMAIL_USER,
   emailFromPass: process.env.EMAIL_PASS,
   emailHost: process.env.EMAIL_HOST,
-  mongoDbUri: process.env.MONGODB_URI,
-  mongoDbModelName: 'myuser',
-  mongoDbSchemaDefinition: {
-    customFieldOne: {
-      type: String,
-      default: 'USER',
-    },
-    customFieldTwo: {
-      type: Number,
-    },
-  },
+  userModel: accountModel,
   clientBaseUrl: 'http://localhost:3000',
 })
 
