@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Document, Model } from 'mongoose';
 
 export declare interface AuthRequest<T = {}> extends Request {
-  user?: Document<T>;
+  user?: T & Document;
 }
 
 export declare interface LoginExpressConfig<T = {}> {
