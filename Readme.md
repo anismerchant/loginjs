@@ -162,7 +162,7 @@ const accountSchema = new mongoose.Schema(
     auth: { type: String, default: 'USER' },
   }
 )
-const accountModel = mongoose.model('account', accountSchema)
+const accountModel = mongoose.model('Account', accountSchema)
 
 // intialize login-express
 const loginJS = new LoginExpress({
