@@ -1,17 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
-import { Document } from 'mongoose';
+import { Document, Model } from 'mongoose';
 
-export declare interface AuthRequest<UserDocument = {}> extends Request {
-  user?: UserDocument;
+export declare interface AuthRequest<T = {}> extends Request {
+  user?: Document<T>;
 }
 
-export declare interface LoginExpressConfig<UserDocument = {}> {
+export declare interface LoginExpressConfig<T = {}> {
   jwtSecret: string;
   jwtResetSecret: string;
   emailFromUser: string;
   emailFromPass: string;
   emailHost: string;
-  userModel: UserDocument;
+  userModel: Model<T>;
   clientBaseUrl: string;
   emailPort?: 25 | 465 | 587 | 2525;
   emailSecure?: boolean;
@@ -45,8 +45,8 @@ export declare interface ChangePasswordBody {
   newPassword: string;
 }
 
-export declare class LoginExpress<UserDocument = {}> {
-  constructor(config: LoginExpressConfig<UserDocument>);
+export declare class LoginExpress<T = {}> {
+  constructor(config: LoginExpressConfig<T>);
   isLoggedIn(req: Request, res: Response, next: NextFunction): void;
   isAdmin(req: Request, res: Response, next: NextFunction): void;
   getUser<T>(id: string): Promise<T>;
@@ -56,6 +56,6 @@ export declare class LoginExpress<UserDocument = {}> {
   logout(res: Response): void;
   changePassword(res: Response, options: ChangePasswordBody): Promise<void>;
   createSession(res: Response, userId: string): void;
-  sendVerificationEmail(user: UserDocument): Promise<void>;
+  sendVerificationEmail(user: Document<T>): Promise<void>;
   sendPasswordResetEmail(email: string): Promise<void>;
 }
