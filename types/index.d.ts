@@ -51,7 +51,7 @@ export declare class LoginExpress<T = {}> {
   isAdmin(req: Request, res: Response, next: NextFunction): void;
   getUser<T>(id: string): Promise<T>;
   register(res: Response, userInfo: RegisterBody): Promise<void>;
-  verify(token: string): Promise<void>;
+  verify(token: string): Promise<T>;
   login(res: Response, userInfo: LoginBody): Promise<void>;
   logout(res: Response): void;
   changePassword(res: Response, options: ChangePasswordBody): Promise<void>;
