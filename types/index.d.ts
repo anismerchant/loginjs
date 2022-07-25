@@ -1,5 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import { Document, Model } from 'mongoose';
+
+type ExpressCore = typeof express;
 
 export declare interface AuthRequest<T = {}> extends Request {
   user?: T & Document;
@@ -59,3 +61,37 @@ export declare class LoginExpress<T = {}> {
   sendVerificationEmail(user: Document<T>): Promise<void>;
   sendPasswordResetEmail(email: string): Promise<void>;
 }
+
+export declare interface DatabaseConfig {
+  mongodbURI: string;
+  jwtSecret: string;
+  passwordLength?: number;
+  jwtSessionExpiration?: number;
+}
+
+export declare interface AppConfig {
+  jwtResetSecret: string;
+  emailFromUser: string;
+  emailFromPass: string;
+  emailHost: string;
+  emailPort: number;
+  emailSecure: boolean;
+  jwtResetExpiration?: number;
+  basePath?: string;
+}
+
+export declare interface EmailConfig {
+  emailHeading: string;
+  emailSubjectLine: string;
+  emailMessage: string;
+}
+
+export default function loginJS(
+  dbConfig: DatabaseConfig,
+  appConfig: AppConfig,
+  app: Express,
+  express: ExpressCore,
+  verifyEmailConfig?: EmailConfig | {},
+  resetEmailConfig?: EmailConfig | {},
+  basePath?: string
+): void;
