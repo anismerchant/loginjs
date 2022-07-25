@@ -1,6 +1,6 @@
 {
   "name": "login-express",
-  "version": "2.0.19",
+  "version": "2.0.20",
   "description": "Generates node.js user signup & login system",
   "main": "index.js",
   "types": "./types/index.d.ts",
