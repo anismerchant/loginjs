@@ -232,6 +232,16 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// logout
+router.post('/logout', loginJS.isLoggedIn, async (req, res) => {
+  try {
+    loginJS.logout(res);
+    res.status(200).end();
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
+
 // send verification email
 router.post(
   '/send-verify-email',
@@ -272,7 +282,7 @@ router.post('/send-reset-password', async (req, res) => {
 router.patch('/reset-password', async (req, res) => {
   const { resetToken, newPassword } = req.body;
   try {
-    await loginJS.changePassword({ resetToken, newPassword });
+    await loginJS.changePassword(res, { resetToken, newPassword });
     res.status(200).end();
   } catch (err) {
     res.status(400).send(err.message);
