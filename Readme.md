@@ -174,21 +174,19 @@ const app = express();
 mongoose.connect('my-mongodb-uri');
 
 // initialize ORM
-const accountSchema = new mongoose.Schema(
-  {
-    // required fields
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-    avatar: { type: String, default: '' },
-    verifyEmail: { type: Boolean, default: false },
-    verifyEmailToken: { type: String, default: '' },
-    resetToken: { type: String, default: '' },
-    auth: { type: String, default: 'USER' },
-    // example of custom field
-    customField: { type: String, default: 'initialValue' }
-  }
-);
+const accountSchema = new mongoose.Schema({
+  // required fields
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  password: { type: String, required: true },
+  avatar: { type: String, default: '' },
+  verifyEmail: { type: Boolean, default: false },
+  verifyEmailToken: { type: [String], default: [] },
+  resetToken: { type: [String], default: [] },
+  auth: { type: String, default: 'USER' },
+  // example of custom field
+  customField: { type: String, default: 'initialValue' },
+})
 const accountModel = mongoose.model('Account', accountSchema);
 
 // intialize login-express
@@ -226,6 +224,16 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     await loginJS.login(res, { email, password });
+    res.status(200).end();
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
+
+// logout
+router.post('/logout', loginJS.isLoggedIn, async (req, res) => {
+  try {
+    loginJS.logout(res);
     res.status(200).end();
   } catch (err) {
     res.status(400).send(err.message);
@@ -272,7 +280,7 @@ router.post('/send-reset-password', async (req, res) => {
 router.patch('/reset-password', async (req, res) => {
   const { resetToken, newPassword } = req.body;
   try {
-    await loginJS.changePassword({ resetToken, newPassword });
+    await loginJS.changePassword(res, { resetToken, newPassword });
     res.status(200).end();
   } catch (err) {
     res.status(400).send(err.message);
