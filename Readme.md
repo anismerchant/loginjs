@@ -195,7 +195,7 @@ const loginJS = new LoginExpress({
   jwtResetSecret: 'jwt-reset-secret',
   emailFromUser: 'myemail@example.com',
   emailFromPass: 'myemailpassword',
-  emailHost: 'stmp.myemailserver.com',
+  emailHost: 'smtp.myemailserver.com',
   userModel: accountModel,
   clientBaseUrl: 'http://localhost:3000'
 });
