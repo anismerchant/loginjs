@@ -17,8 +17,8 @@ export declare interface LoginExpressConfig<T = {}> {
   clientBaseUrl: string;
   emailPort?: 25 | 465 | 587 | 2525;
   emailSecure?: boolean;
-  emailProvider: string;
-  emailProviderRegion: string;
+  emailProvider?: string;
+  emailProviderRegion?: string;
   verifyEmailHeading?: string;
   verifyEmailSubjectLine?: string;
   verifyEmailMessage?: string;
